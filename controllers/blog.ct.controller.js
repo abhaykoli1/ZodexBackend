@@ -1,7 +1,5 @@
-const { get } = require('mongoose');
-const BlogCategory = require('../models/blog.ct.model')
-
-
+const { get } = require("mongoose");
+const BlogCategory = require("../models/blog.ct.model");
 
 const createBlogCategory = async (req, res) => {
   try {
@@ -61,12 +59,12 @@ const deleteBlogCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 module.exports = {
   createBlogCategory,
   getBlogsCategory,
   getBlogCategoryById,
   updateBlogCategory,
-  deleteBlogCategory
+  deleteBlogCategory,
 };

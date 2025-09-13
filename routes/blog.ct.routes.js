@@ -4,15 +4,15 @@ const {
   getBlogsCategory,
   getBlogCategoryById,
   updateBlogCategory,
-  deleteBlogCategory
-} = require('../controllers/blog.ct.controller');
+  deleteBlogCategory,
+} = require("../controllers/blog.ct.controller");
 
 const router = express.Router();
 
-router.post('/', createBlogCategory);
-router.get('/', getBlogsCategory);
-router.get('/:id', getBlogCategoryById);
-router.put('/:id', updateBlogCategory);
-router.delete('/:id', deleteBlogCategory);
+router.post("/", createBlogCategory);
+router.get("/", getBlogsCategory);
+router.get("/:id", getBlogCategoryById);
+router.put("/update/:id", updateBlogCategory);
+router.delete("/:id", deleteBlogCategory);
 
 module.exports = router;
