@@ -2,7 +2,23 @@ const mongoose = require("mongoose");
 
 const BlogSchema = new mongoose.Schema(
   {
-    bloggCategory: {
+    slug: {
+      type: String,
+      required: [true, "slug is required"],
+    },
+    meta_title: {
+      type: String,
+      required: [true, "SEO title is required"],
+    },
+    metaDescription: {
+      type: String,
+      required: [true, "Meta description is required"],
+    },
+    metaKeywords: {
+      type: [String],
+      required: [true, "Meta keywords are required"],
+    },
+    blogCategory: {
       type: String,
       required: [true, "Blog category is required"],
     },
