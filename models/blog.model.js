@@ -19,7 +19,8 @@ const BlogSchema = new mongoose.Schema(
       required: [true, "Meta keywords are required"],
     },
     blogCategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "BlogCategory", // 👈 reference to BlogCategory
       required: [true, "Blog category is required"],
     },
     headline: {
@@ -27,7 +28,7 @@ const BlogSchema = new mongoose.Schema(
       required: [true, "Blog headline is required"],
     },
     image: {
-      type: String, // URL or file path of the image
+      type: String,
       required: [true, "Blog image is required"],
     },
     content: {
@@ -38,4 +39,4 @@ const BlogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("BlogSchema", BlogSchema);
+module.exports = mongoose.model("Blog", BlogSchema);

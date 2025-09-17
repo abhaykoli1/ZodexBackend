@@ -1,5 +1,6 @@
 const { get } = require("mongoose");
 const BlogCategory = require("../models/blog.ct.model");
+const mongoose = require("mongoose");
 
 const createBlogCategory = async (req, res) => {
   try {
@@ -34,17 +35,28 @@ const getBlogCategoryById = async (req, res) => {
 
 const updateBlogCategory = async (req, res) => {
   try {
-    const blog = await BlogCategory.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
+    const { id } = req.params;
+
+    // Check for valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
+
+    const blog = await BlogCategory.findByIdAndUpdate(id, req.body, {
+      new: true, // return the updated doc
+      runValidators: true, // enforce schema validation
     });
-    if (!blog)
+
+    if (!blog) {
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
+    }
+
     res.json({ success: true, data: blog });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error("Update BlogCategory Error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
