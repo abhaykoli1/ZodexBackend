@@ -23,8 +23,9 @@ app.use(
 app.use(express.json());
 
 // Serve static uploads folder
-app.use("/api/v1/uploads", express.static(path.join(__dirname, "uploads")));
-
+// app.use("/api/v1/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/v1/uploads", express.static(path.join(process.cwd(), "uploads")));
 // Routes
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/upload", uploadRoutes);
