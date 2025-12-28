@@ -7,6 +7,7 @@ const productRoutes = require("./routes/productRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const blogCategory = require("./routes/blog.ct.routes");
+const contactRoutes = require("./routes/contact.routes");
 dotenv.config();
 connectDB();
 
@@ -29,6 +30,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/upload", uploadRoutes);
 app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/blogCategory", blogCategory);
+app.use("/api/v1/contact", contactRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
