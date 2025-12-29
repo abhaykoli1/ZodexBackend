@@ -1,75 +1,66 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const router = express.Router();
 
 /* ============================
-   Ensure uploads folder exists
+   Cloudinary config
 ============================ */
-const uploadDir = path.join(process.cwd(), "uploads");
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-/* ============================
-   Multer storage config
-============================ */
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // absolute path (SAFE)
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+cloudinary.config({
+  cloud_name: "djikwo1nv",
+  api_key: "421379823212898",
+  api_secret: "za_fkR_wPlp2HvzTfBaeFykiQcQ",
 });
 
 /* ============================
-   File filter (images only)
-============================ */
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const extname = allowedTypes.test(
-    path.extname(file.originalname).toLowerCase()
-  );
-  const mimetype = allowedTypes.test(file.mimetype);
-
-  if (extname && mimetype) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed"));
-  }
-};
-
-/* ============================
-   Multer instance
+   Multer (MEMORY storage)
 ============================ */
 const upload = multer({
-  storage,
-  fileFilter,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const ext = allowed.test(file.originalname.toLowerCase());
+    const mime = allowed.test(file.mimetype);
+
+    if (ext && mime) cb(null, true);
+    else cb(new Error("Only image files are allowed"));
+  },
 });
 
 /* ============================
    Upload API
 ============================ */
-router.post("/", upload.single("image"), (req, res) => {
-  // console.log("FILE:", req.file);
+router.post("/", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
 
-  if (!req.file) {
-    return res.status(400).json({
+    const base64Image = `data:${
+      req.file.mimetype
+    };base64,${req.file.buffer.toString("base64")}`;
+
+    const result = await cloudinary.uploader.upload(base64Image, {
+      folder: "uploads",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Image uploaded successfully",
+      filePath: result.secure_url,
+    });
+  } catch (error) {
+    console.error("UPLOAD ERROR:", error);
+    res.status(500).json({
       success: false,
-      message: "No file uploaded",
+      message: "Upload failed",
     });
   }
-
-  res.status(200).json({
-    success: true,
-    message: "Image uploaded successfully",
-    filePath: `/uploads/${req.file.filename}`,
-  });
 });
 
 module.exports = router;
