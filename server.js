@@ -16,16 +16,21 @@ app.use(
   cors({
     origin: ["http://localhost:5173", "https://it.zodex.in", "*"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
   })
 );
 app.use(express.json());
 
 // Serve static uploads folder
-// app.use("/api/v1/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/v1/uploads", express.static(path.join(__dirname, "uploads")));
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/api/v1/uploads", express.static(path.join(process.cwd(), "uploads")));
+// app.use("/api/v1/uploads", express.static(path.join(process.cwd(), "uploads")));
 // Routes
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/upload", uploadRoutes);
